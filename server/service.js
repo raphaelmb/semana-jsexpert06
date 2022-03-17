@@ -41,7 +41,7 @@ export class Service {
   }
 
   _executeSoxCommand(args) {
-    childProcess.spawn("sox", args);
+    return childProcess.spawn("sox", args);
   }
 
   async getBitRate(song) {
