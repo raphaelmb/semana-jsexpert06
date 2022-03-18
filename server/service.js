@@ -22,7 +22,6 @@ export class Service {
     this.currentBitRate = 0;
     this.throttleTransform = {};
     this.currentReadable = {};
-    this.startStream();
   }
 
   createClientStream() {
@@ -48,7 +47,6 @@ export class Service {
     try {
       const args = ["--i", "-B", song];
       const { stderr, stdout, stin } = this._executeSoxCommand(args);
-      console.log(stdout);
 
       await Promise.all([once(stderr, "readable"), once(stdout, "readable")]);
 
@@ -78,7 +76,7 @@ export class Service {
     });
   }
 
-  async startStream() {
+  async startStreamming() {
     logger.info(`Starting with ${this.currentSong}`);
     const bitRate = (this.currentBitRate =
       (await this.getBitRate(this.currentSong)) / bitRateDivisor);
@@ -87,6 +85,10 @@ export class Service {
       this.currentSong
     ));
     streamsPromises.pipeline(songReadable, throttleTransform, this.broadCast());
+  }
+
+  stopStreamming() {
+    this.throttleTransform?.end?.();
   }
 
   createFileStream(filename) {
