@@ -80,11 +80,11 @@ export class Service {
     logger.info(`Starting with ${this.currentSong}`);
     const bitRate = (this.currentBitRate =
       (await this.getBitRate(this.currentSong)) / bitRateDivisor);
-    const throttleTransform = new Throttle(bitRate);
+    const throttleTransform = this.throttleTransform = new Throttle(bitRate);
     const songReadable = (this.currentReadable = this.createFileStream(
       this.currentSong
     ));
-    streamsPromises.pipeline(songReadable, throttleTransform, this.broadCast());
+    return streamsPromises.pipeline(songReadable, throttleTransform, this.broadCast());
   }
 
   stopStreamming() {
